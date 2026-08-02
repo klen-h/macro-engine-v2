@@ -1,7 +1,9 @@
 name: A股盘前策略复盘
 
 on:
-  workflow_dispatch:        # 可手动触发
+  schedule:
+    - cron: '30 0 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   premarket-review:

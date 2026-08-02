@@ -1,7 +1,9 @@
 name: A股午盘复盘
 
 on:
-  workflow_dispatch:        # 可手动触发
+  schedule:
+    - cron: '35 3 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   lunchbreak-review:
