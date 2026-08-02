@@ -2,6 +2,31 @@
   "predictions": [
     {
       "date": "2026/8/3",
+      "timestamp": "2026-08-02T19:43:42.772Z",
+      "market_phase": "系统性风险",
+      "pressure_count": 3,
+      "recommendations": [
+        {
+          "action": "减仓",
+          "target": "科技ETF",
+          "why": "F-35C部署及商船拦截显示冲突升级风险，直接冲击风险偏好",
+          "value_score": 1,
+          "transmission_chain": "美伊军事对峙 → 原油供给风险 → 通胀预期上升 → 货币政策收紧预期 → 全市场估值承压"
+        },
+        {
+          "action": "观望",
+          "target": "基建ETF",
+          "why": "政策效力需观察执行细节，当前经济收缩环境下效果存疑",
+          "value_score": 1,
+          "transmission_chain": "天津存量资产新政 → 地方债务化解 → 基建投资预期升温 → 工程机械/建材需求 → 基建ETF"
+        }
+      ],
+      "price_snapshot": [],
+      "market_mood": "谨慎偏悲观：经济数据全面弱化叠加地缘不确定性",
+      "uncertainty_level": "中"
+    },
+    {
+      "date": "2026/8/3",
       "timestamp": "2026-08-02T19:33:13.639Z",
       "market_phase": "谨慎",
       "pressure_count": 2,
