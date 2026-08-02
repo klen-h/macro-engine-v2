@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>五层因子策略回测</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      background: #0b0f19; 
+      color: #e2e8f0; 
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 { font-size: 24px; margin-bottom: 8px; }
+    .subtitle { color: #64748b; font-size: 14px; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card { 
+      background: #1e293b; 
+      border-radius: 12px; 
+      padding: 20px; 
+      border: 1px solid #334155;
+    }
+    .metric-value { 
+      font-size: 36px; 
+      font-weight: 700; 
+      margin-bottom: 4px;
+    }
+    .metric-label { font-size: 13px; color: #94a3b8; }
+    .positive { color: #4ade80; }
+    .negative { color: #f87171; }
+    .neutral { color: #38bdf8; }
+    .chart-card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
+    .chart-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #cbd5e1; }
+    .chart { width: 100%; height: 320px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #334155; }
+    th { color: #94a3b8; font-weight: 500; font-size: 12px; text-transform: uppercase; }
+    .tag { 
+      display: inline-block; 
+      padding: 2px 8px; 
+      border-radius: 4px; 
+      font-size: 11px; 
+      font-weight: 600;
+    }
+    .tag-buy { background: rgba(74, 222, 128, 0.15); color: #4ade80; }
+    .tag-sell { background: rgba(248, 113, 113, 0.15); color: #f87171; }
+    .tag-hold { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+    .correct { color: #4ade80; font-weight: 600; }
+    .wrong { color: #f87171; font-weight: 600; }
+    .loading { text-align: center; padding: 40px; color: #64748b; }
+    .empty { text-align: center; padding: 60px; color: #64748b; }
+  </style>
+</head>
+<body>
+  <h1>📊 五层因子策略回测</h1>
+  <p class="subtitle">基于 LLM 推荐 vs 实际收盘验证 | 数据自动更新</p>
+
+  <div id="metrics" class="grid" style="display:none;">
+    <div class="card">
+      <div class="metric-value neutral" id="totalAccuracy">--</div>
+      <div class="metric-label">总准确率</div>
+    </div>
+    <div class="card">
+      <div class="metric-value neutral" id="totalTrades">--</div>
+      <div class="metric-label">总推荐次数</div>
+    </div>
+    <div class="card">
+      <div class="metric-value neutral" id="avgReturn">--</div>
+      <div class="metric-label">平均单次收益</div>
+    </div>
+    <div class="card">
+      <div class="metric-value neutral" id="winRate">--</div>
+      <div class="metric-label">正收益占比</div>
+    </div>
+  </div>
+
+  <div class="chart-card" id="accuracySection" style="display:none;">
+    <div class="chart-title">📈 每日准确率趋势（近30日）</div>
+    <div id="accuracyChart" class="chart"></div>
+  </div>
+
+  <div class="chart-card" id="pnlSection" style="display:none;">
+    <div class="chart-title">💰 累计收益曲线（假设等额配置）</div>
+    <div id="pnlChart" class="chart"></div>
+  </div>
+
+  <div class="chart-card" id="recordsSection" style="display:none;">
+    <div class="chart-title">📝 近期验证记录</div>
+    <div style="overflow-x: auto;">
+      <table id="recordsTable">
+        <thead>
+          <tr>
+            <th>日期</th>
+            <th>ETF</th>
+            <th>操作</th>
+            <th>预测</th>
+            <th>实际涨跌</th>
+            <th>结果</th>
+            <th>理由</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="loading" class="loading">正在加载数据...</div>
+  <div id="empty" class="empty" style="display:none;">暂无验证数据，请等待收盘后自动更新</div>
+
+  <script>
+    async function loadData() {
+      try {
+        const [predRes, verRes] = await Promise.all([
+          fetch('./data/predictions.json').catch(() => null),
+          fetch('./data/verifications.json').catch(() => null)
+        ]);
+
+        document.getElementById('loading').style.display = 'none';
+
+        if (!verRes || verRes.status === 404) {
+          document.getElementById('empty').style.display = 'block';
+          return;
+        }
+
+        const verifications = await verRes.json();
+        const predictions = predRes && predRes.status !== 404 ? await predRes.json() : { predictions: [] };
+
+        if (!verifications.verifications || verifications.verifications.length === 0) {
+          document.getElementById('empty').style.display = 'block';
+          return;
+        }
+
+        document.getElementById('metrics').style.display = 'grid';
+        document.getElementById('accuracySection').style.display = 'block';
+        document.getElementById('pnlSection').style.display = 'block';
+        document.getElementById('recordsSection').style.display = 'block';
+
+        renderMetrics(verifications.verifications);
+        renderAccuracyChart(verifications.verifications);
+        renderPnlChart(verifications.verifications);
+        renderTable(verifications.verifications);
+
+      } catch (err) {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('empty').textContent = '加载失败: ' + err.message;
+        document.getElementById('empty').style.display = 'block';
+      }
+    }
+
+    function renderMetrics(vers) {
+      const allResults = vers.flatMap(v => v.results || []).filter(r => r.is_correct !== null);
+      if (allResults.length === 0) return;
+
+      const correct = allResults.filter(r => r.is_correct).length;
+      const accuracy = (correct / allResults.length * 100).toFixed(1);
+      const avgReturn = (allResults.reduce((a, r) => a + r.actual_return, 0) / allResults.length).toFixed(2);
+      const winRate = (allResults.filter(r => r.actual_return > 0).length / allResults.length * 100).toFixed(1);
+
+      const accEl = document.getElementById('totalAccuracy');
+      accEl.textContent = accuracy + '%';
+      accEl.className = 'metric-value ' + (accuracy >= 55 ? 'positive' : 'negative');
+
+      document.getElementById('totalTrades').textContent = allResults.length;
+
+      const retEl = document.getElementById('avgReturn');
+      retEl.textContent = (avgReturn > 0 ? '+' : '') + avgReturn + '%';
+      retEl.className = 'metric-value ' + (parseFloat(avgReturn) >= 0 ? 'positive' : 'negative');
+
+      const winEl = document.getElementById('winRate');
+      winEl.textContent = winRate + '%';
+      winEl.className = 'metric-value ' + (parseFloat(winRate) >= 50 ? 'positive' : 'negative');
+    }
+
+    function renderAccuracyChart(vers) {
+      const recent = vers.slice(0, 30).reverse();
+      const dates = recent.map(v => v.date.slice(5));
+      const data = recent.map(v => v.overall_accuracy || 0);
+
+      const chart = echarts.init(document.getElementById('accuracyChart'));
+      chart.setOption({
+        tooltip: { trigger: 'axis', backgroundColor: '#1e293b', borderColor: '#334155', textStyle: { color: '#e2e8f0' } },
+        grid: { left: 50, right: 20, top: 20, bottom: 30 },
+        xAxis: { 
+          type: 'category', 
+          data: dates, 
+          axisLine: { lineStyle: { color: '#334155' } },
+          axisLabel: { color: '#94a3b8', fontSize: 11 }
+        },
+        yAxis: { 
+          type: 'value', 
+          max: 100, 
+          min: 0,
+          axisLine: { lineStyle: { color: '#334155' } },
+          axisLabel: { color: '#94a3b8', formatter: '{value}%' },
+          splitLine: { lineStyle: { color: '#1e293b' } }
+        },
+        series: [{
+          data: data,
+          type: 'line',
+          smooth: true,
+          symbol: 'circle',
+          symbolSize: 6,
+          lineStyle: { color: '#38bdf8', width: 2 },
+          itemStyle: { color: '#38bdf8' },
+          areaStyle: { 
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(56, 189, 248, 0.3)' },
+              { offset: 1, color: 'rgba(56, 189, 248, 0)' }
+            ])
+          },
+          markLine: {
+            silent: true,
+            data: [{ yAxis: 50, lineStyle: { color: '#64748b', type: 'dashed' } }],
+            label: { formatter: '随机基准 50%', color: '#64748b', fontSize: 10 }
+          }
+        }]
+      });
+    }
+
+    function renderPnlChart(vers) {
+      const recent = vers.slice(0, 60).reverse();
+      let cumulative = 0;
+      const dates = [];
+      const values = [];
+
+      for (const v of recent) {
+        const dayReturn = (v.results || [])
+          .filter(r => r.is_correct !== null)
+          .reduce((sum, r) => sum + r.actual_return, 0) / Math.max(v.results?.filter(r => r.is_correct !== null).length || 1, 1);
+        cumulative += dayReturn;
+        dates.push(v.date.slice(5));
+        values.push(parseFloat(cumulative.toFixed(2)));
+      }
+
+      const chart = echarts.init(document.getElementById('pnlChart'));
+      chart.setOption({
+        tooltip: { trigger: 'axis', backgroundColor: '#1e293b', borderColor: '#334155', textStyle: { color: '#e2e8f0' } },
+        grid: { left: 50, right: 20, top: 20, bottom: 30 },
+        xAxis: { 
+          type: 'category', 
+          data: dates,
+          axisLine: { lineStyle: { color: '#334155' } },
+          axisLabel: { color: '#94a3b8', fontSize: 11, rotate: 45 }
+        },
+        yAxis: { 
+          type: 'value',
+          axisLine: { lineStyle: { color: '#334155' } },
+          axisLabel: { color: '#94a3b8', formatter: '{value}%' },
+          splitLine: { lineStyle: { color: '#1e293b' } }
+        },
+        series: [{
+          data: values,
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          lineStyle: { 
+            color: values[values.length - 1] >= 0 ? '#4ade80' : '#f87171', 
+            width: 2 
+          },
+          areaStyle: { 
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: values[values.length - 1] >= 0 ? 'rgba(74, 222, 128, 0.2)' : 'rgba(248, 113, 113, 0.2)' },
+              { offset: 1, color: 'transparent' }
+            ])
+          }
+        }]
+      });
+    }
+
+    function renderTable(vers) {
+      const tbody = document.querySelector('#recordsTable tbody');
+      const recent = vers.slice(0, 15);
+
+      for (const v of recent) {
+        for (const r of (v.results || []).filter(x => x.is_correct !== null)) {
+          const row = document.createElement('tr');
+          const actionClass = r.action === '加仓' || r.action === '埋伏' ? 'tag-buy' : 
+                             r.action === '减仓' ? 'tag-sell' : 'tag-hold';
+          row.innerHTML = `
+            <td>${v.date.slice(5)}</td>
+            <td><strong>${r.target}</strong></td>
+            <td><span class="tag ${actionClass}">${r.action}</span></td>
+            <td>${r.predicted_direction === 'up' ? '看涨 📈' : '看跌 📉'}</td>
+            <td style="color: ${r.actual_return > 0 ? '#4ade80' : '#f87171'}">
+              ${r.actual_return > 0 ? '+' : ''}${r.actual_return.toFixed(2)}%
+            </td>
+            <td class="${r.is_correct ? 'correct' : 'wrong'}">
+              ${r.is_correct ? '✅ 命中' : '❌ 偏离'}
+            </td>
+            <td style="color: #94a3b8; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${r.why || ''}">
+              ${r.why || '-'}
+            </td>
+          `;
+          tbody.appendChild(row);
+        }
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>

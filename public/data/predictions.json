@@ -1,0 +1,22 @@
+{
+  "predictions": [
+    {
+      "date": "2026/8/2",
+      "timestamp": "2026-08-02T14:46:22.433Z",
+      "market_phase": "谨慎",
+      "pressure_count": 2,
+      "recommendations": [
+        {
+          "action": "减仓",
+          "target": "人工智能ETF",
+          "why": "冲突直接推升原油成本，压制科技股盈利预期，且与国内弱基本面形成共振",
+          "value_score": 1,
+          "transmission_chain": "以伊冲突升级 → 霍尔木兹海峡航运风险 → 原油供给中断预期 → 通胀预期升温 → 货币政策收紧压力 → 高估值成长股承压 → 减仓科技ETF/人工智能ETF"
+        }
+      ],
+      "price_snapshot": [],
+      "market_mood": "地缘焦虑主导但未扩散，国内数据疲软压制风险偏好",
+      "uncertainty_level": "高"
+    }
+  ]
+}

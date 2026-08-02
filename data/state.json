@@ -1,0 +1,27 @@
+{
+  "lastId": "20260802212924338800",
+  "pushedClusters": [
+    {
+      "cluster": "中东战争",
+      "firstId": "20260802203640221800",
+      "firstTime": "2026-08-02T14:46:22.435Z",
+      "lastUpdateId": "20260802203640221800",
+      "lastUpdateTime": "2026-08-02T14:46:22.435Z",
+      "pushCount": 1,
+      "hotMax": "沸",
+      "hadUrgent": false,
+      "hasMilitary": false
+    },
+    {
+      "cluster": "原油能源",
+      "firstId": "20260802212014565800",
+      "firstTime": "2026-08-02T14:46:22.435Z",
+      "lastUpdateId": "20260802212014565800",
+      "lastUpdateTime": "2026-08-02T14:46:22.435Z",
+      "pushCount": 1,
+      "hotMax": "沸",
+      "hadUrgent": false,
+      "hasMilitary": false
+    }
+  ]
+}
