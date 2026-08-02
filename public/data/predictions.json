@@ -2,6 +2,31 @@
   "predictions": [
     {
       "date": "2026/8/3",
+      "timestamp": "2026-08-02T20:33:28.128Z",
+      "market_phase": "谨慎",
+      "pressure_count": 2,
+      "recommendations": [
+        {
+          "action": "加仓",
+          "target": "军工ETF",
+          "why": "F-35C部署显示军事行动升级，直接推高国防需求",
+          "value_score": 1,
+          "transmission_chain": "地缘冲突→原油供给风险→通胀预期上升→能源/军工板块受益→煤炭ETF/军工ETF"
+        },
+        {
+          "action": "观望",
+          "target": "无直接标的",
+          "why": "政策适用范围有限，且消费ETF/银行ETF传导链条过长",
+          "value_score": 0.6,
+          "transmission_chain": "政策松绑→不动产登记加速→房企现金流改善→地产链估值修复→暂无直接ETF映射"
+        }
+      ],
+      "price_snapshot": [],
+      "market_mood": "谨慎偏空，防御性逻辑主导",
+      "uncertainty_level": "中"
+    },
+    {
+      "date": "2026/8/3",
       "timestamp": "2026-08-02T20:24:17.133Z",
       "market_phase": "谨慎",
       "pressure_count": 2,
