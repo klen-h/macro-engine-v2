@@ -2,6 +2,38 @@
   "predictions": [
     {
       "date": "2026/8/3",
+      "timestamp": "2026-08-02T23:13:36.858Z",
+      "market_phase": "系统性风险",
+      "pressure_count": 3,
+      "recommendations": [
+        {
+          "action": "加仓",
+          "target": "黄金ETF",
+          "why": "美军行动与外交表态矛盾推升避险需求，且D1状态下黄金具独立行情特征",
+          "value_score": 1,
+          "transmission_chain": "地缘风险波动 → 避险需求上升 → 黄金价格支撑 → 黄金ETF"
+        },
+        {
+          "action": "减仓",
+          "target": "人工智能ETF",
+          "why": "L1收紧直接压制高估值成长股，且与L3收缩形成双击",
+          "value_score": 1,
+          "transmission_chain": "加息预期强化 → 美债收益率上行 → 北向资金流出压力 → 科技估值承压 → 减仓科技ETF"
+        },
+        {
+          "action": "减仓",
+          "target": "证券ETF",
+          "why": "处罚反映监管常态化，压制板块情绪",
+          "value_score": 0.6,
+          "transmission_chain": "投行严监管 → 券商业务收入预期下调 → 证券板块估值压制 → 证券ETF"
+        }
+      ],
+      "price_snapshot": [],
+      "market_mood": "谨慎悲观",
+      "uncertainty_level": "中"
+    },
+    {
+      "date": "2026/8/3",
       "timestamp": "2026-08-02T23:03:44.470Z",
       "market_phase": "系统性风险",
       "pressure_count": 3,
