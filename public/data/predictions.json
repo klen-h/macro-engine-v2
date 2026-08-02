@@ -2,6 +2,24 @@
   "predictions": [
     {
       "date": "2026/8/3",
+      "timestamp": "2026-08-02T21:53:17.499Z",
+      "market_phase": "系统性风险",
+      "pressure_count": 3,
+      "recommendations": [
+        {
+          "action": "观望",
+          "target": "黄金ETF",
+          "why": "事件敏感性高但实时数据缺失，需验证油价/VIX联动",
+          "value_score": 1,
+          "transmission_chain": "地缘冲突风险 → 避险资产需求上升 → 贵金属/军工板块受益 → 黄金ETF/军工ETF"
+        }
+      ],
+      "price_snapshot": [],
+      "market_mood": "高度谨慎，避险情绪主导",
+      "uncertainty_level": "高"
+    },
+    {
+      "date": "2026/8/3",
       "timestamp": "2026-08-02T21:42:52.605Z",
       "market_phase": "谨慎",
       "pressure_count": 2,
