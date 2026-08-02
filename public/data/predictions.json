@@ -2,6 +2,38 @@
   "predictions": [
     {
       "date": "2026/8/3",
+      "timestamp": "2026-08-02T19:53:12.925Z",
+      "market_phase": "谨慎",
+      "pressure_count": 2,
+      "recommendations": [
+        {
+          "action": "观望",
+          "target": "标普油气ETF",
+          "why": "冲突与谅解备忘录信号矛盾，需观察美军行动与伊朗履约情况",
+          "value_score": 1,
+          "transmission_chain": "美伊军事对峙 → 原油供给风险上升 → 能源价格通胀 → 标普油气ETF受益"
+        },
+        {
+          "action": "埋伏",
+          "target": "国债ETF",
+          "why": "单月减持规模异常但持续性待验证，若形成趋势将利好境内固收",
+          "value_score": 0.7,
+          "transmission_chain": "日本抛售美债 → 全球美元流动性收紧 → 中美国债利差走阔 → 国债ETF对冲价值提升"
+        },
+        {
+          "action": "观望",
+          "target": "地产ETF",
+          "why": "政策属边际改善但需销售数据验证，当前行业风险溢价仍高",
+          "value_score": 0.5,
+          "transmission_chain": "地方政策松绑 → 不良资产处置加速 → 区域性房企现金流改善 → 地产ETF估值修复"
+        }
+      ],
+      "price_snapshot": [],
+      "market_mood": "谨慎偏空，地缘风险与国内弱数据主导",
+      "uncertainty_level": "中"
+    },
+    {
+      "date": "2026/8/3",
       "timestamp": "2026-08-02T19:43:42.772Z",
       "market_phase": "系统性风险",
       "pressure_count": 3,
