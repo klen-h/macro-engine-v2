@@ -527,8 +527,8 @@ async function main() {
   } else {
     prompt = buildPostmarketPrompt(clusters, macro, etfHoldings, contentMap, macroHistory);
   }
-  console.log(prompt);
-  return;
+  // console.log(prompt);
+  // return;
   // 5. 主模型分析
   const model = CONFIG.LLM.MODEL;
   console.log(`🤖 模型 [${model}] 分析中...`);

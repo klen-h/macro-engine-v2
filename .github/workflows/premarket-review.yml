@@ -1,8 +1,6 @@
 name: A股盘前策略复盘
 
 on:
-  schedule:
-    - cron: '30 0 * * 1-5'
   workflow_dispatch:
 
 jobs:
