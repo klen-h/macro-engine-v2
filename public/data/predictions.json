@@ -2,6 +2,38 @@
   "predictions": [
     {
       "date": "2026/8/3",
+      "timestamp": "2026-08-02T21:13:42.141Z",
+      "market_phase": "系统性风险",
+      "pressure_count": 3,
+      "recommendations": [
+        {
+          "action": "减仓",
+          "target": "人工智能ETF/半导体ETF",
+          "why": "地缘风险直接冲击风险偏好，高估值科技板块最敏感",
+          "value_score": 5,
+          "transmission_chain": "美军封锁行动 → 地缘风险溢价上升 → 原油供给冲击 → 通胀预期升温 → 压制成长股估值 → 回避科技ETF/增持黄金ETF"
+        },
+        {
+          "action": "埋伏",
+          "target": "电力ETF",
+          "why": "政策对冲经济下行但效力有限，电力为明确受益板块",
+          "value_score": 3,
+          "transmission_chain": "存量资产政策 → 局部地产/基建改善预期 → 电力需求新高 → 保供政策加码 → 电力/基建产业链受益 → 关注电力ETF/基建ETF"
+        },
+        {
+          "action": "减仓",
+          "target": "证券ETF",
+          "why": "严监管延续压制券商板块情绪",
+          "value_score": 2,
+          "transmission_chain": "证监会罚单 → 投行业务收缩预期 → 券商盈利承压 → 非银金融板块估值下修 → 减仓证券ETF"
+        }
+      ],
+      "price_snapshot": [],
+      "market_mood": "谨慎偏空，经济数据疲软与地缘风险主导情绪",
+      "uncertainty_level": "中"
+    },
+    {
+      "date": "2026/8/3",
       "timestamp": "2026-08-02T21:03:29.876Z",
       "market_phase": "系统性风险",
       "pressure_count": 3,
