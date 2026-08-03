@@ -2,6 +2,142 @@
   "predictions": [
     {
       "date": "2026/8/3",
+      "timestamp": "2026-08-03T01:53:38.724Z",
+      "market_phase": "系统性风险",
+      "pressure_count": 3,
+      "recommendations": [
+        {
+          "action": "减仓",
+          "target": "半导体ETF",
+          "why": "三星/SK海力士暴跌直接冲击A股半导体估值",
+          "value_score": 1,
+          "transmission_chain": "韩国杠杆平仓 → 全球芯片股估值锚下移 → A股半导体产业链盈利预期恶化 → 半导体ETF"
+        },
+        {
+          "action": "观望",
+          "target": "军工ETF",
+          "why": "D1状态下军工具备对冲价值但事件驱动属性强",
+          "value_score": 1,
+          "transmission_chain": "美伊谈判预期 → 地缘风险溢价消退 → 原油供给恢复预期 → 军工/黄金ETF波动加剧"
+        }
+      ],
+      "price_snapshot": [
+        {
+          "name": "沪深300ETF",
+          "price": "4.613",
+          "change": -0.86
+        },
+        {
+          "name": "中证1000ETF",
+          "price": "2.940",
+          "change": 0
+        },
+        {
+          "name": "科创板50ETF",
+          "price": "1.665",
+          "change": -3.65
+        },
+        {
+          "name": "纳斯达克ETF",
+          "price": "2.112",
+          "change": 0
+        },
+        {
+          "name": "恒生科技ETF",
+          "price": "0.606",
+          "change": 1
+        },
+        {
+          "name": "日经225ETF",
+          "price": "2.033",
+          "change": 0.44
+        },
+        {
+          "name": "半导体ETF",
+          "price": "0.945",
+          "change": -4.74
+        },
+        {
+          "name": "人工智能ETF",
+          "price": "1.104",
+          "change": -1.16
+        },
+        {
+          "name": "军工ETF",
+          "price": "1.094",
+          "change": 0.09
+        },
+        {
+          "name": "新能源车ETF",
+          "price": "1.608",
+          "change": -0.68
+        },
+        {
+          "name": "电力ETF",
+          "price": "1.082",
+          "change": 0.93
+        },
+        {
+          "name": "医药ETF",
+          "price": "0.376",
+          "change": -0.27
+        },
+        {
+          "name": "消费ETF",
+          "price": "0.697",
+          "change": 0
+        },
+        {
+          "name": "证券ETF",
+          "price": "1.101",
+          "change": -0.54
+        },
+        {
+          "name": "银行ETF",
+          "price": "0.831",
+          "change": -0.6
+        },
+        {
+          "name": "煤炭ETF",
+          "price": "1.200",
+          "change": 0.08
+        },
+        {
+          "name": "有色ETF",
+          "price": "1.769",
+          "change": -1.28
+        },
+        {
+          "name": "黄金ETF",
+          "price": "8.397",
+          "change": -0.43
+        },
+        {
+          "name": "标普油气ETF",
+          "price": "1.164",
+          "change": -0.51
+        },
+        {
+          "name": "豆粕ETF",
+          "price": "2.074",
+          "change": -0.62
+        },
+        {
+          "name": "国债ETF",
+          "price": "140.978",
+          "change": 0.01
+        },
+        {
+          "name": "短融ETF",
+          "price": "113.749",
+          "change": 0
+        }
+      ],
+      "market_mood": "避险情绪主导，恐慌向亚太蔓延",
+      "uncertainty_level": "高"
+    },
+    {
+      "date": "2026/8/3",
       "timestamp": "2026-08-03T01:44:47.057Z",
       "market_phase": "系统性风险",
       "pressure_count": 4,
