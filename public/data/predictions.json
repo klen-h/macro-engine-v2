@@ -2,6 +2,31 @@
   "predictions": [
     {
       "date": "2026/8/3",
+      "timestamp": "2026-08-03T00:54:08.336Z",
+      "market_phase": "系统性风险",
+      "pressure_count": 3,
+      "recommendations": [
+        {
+          "action": "减仓",
+          "target": "半导体ETF",
+          "why": "跨市场传染逻辑明确且已触发阈值",
+          "value_score": 1,
+          "transmission_chain": "韩国KOSPI跌5% → 全球芯片估值锚下移 → A股半导体产业链重估 → 半导体ETF/人工智能ETF下跌"
+        },
+        {
+          "action": "观望",
+          "target": "黄金ETF",
+          "why": "事件驱动型波动但传导链条断裂（无实时商品报价）",
+          "value_score": 1,
+          "transmission_chain": "美伊谈判 → 地缘风险溢价下降 → 原油/黄金价格波动 → 影响通胀交易逻辑"
+        }
+      ],
+      "price_snapshot": [],
+      "market_mood": "恐慌情绪蔓延（韩国暴跌+地缘不确定性）",
+      "uncertainty_level": "高"
+    },
+    {
+      "date": "2026/8/3",
       "timestamp": "2026-08-03T00:43:54.649Z",
       "market_phase": "谨慎",
       "pressure_count": 2,
