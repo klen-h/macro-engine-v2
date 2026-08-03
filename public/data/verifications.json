@@ -1,0 +1,39 @@
+{
+  "verifications": [
+    {
+      "date": "2026/8/3",
+      "timestamp": "2026-08-03T10:55:50.523Z",
+      "results": [
+        {
+          "action": "减仓",
+          "target": "半导体ETF",
+          "why": "三星/SK海力士暴跌直接冲击A股半导体估值",
+          "value_score": 1,
+          "transmission_chain": "韩国杠杆平仓 → 全球芯片股估值锚下移 → A股半导体产业链盈利预期恶化 → 半导体ETF",
+          "prev_price": "0.945",
+          "close_price": "0.921",
+          "actual_return": -7.16,
+          "predicted_direction": "down",
+          "actual_direction": "down",
+          "is_correct": true
+        },
+        {
+          "action": "观望",
+          "target": "军工ETF",
+          "why": "D1状态下军工具备对冲价值但事件驱动属性强",
+          "value_score": 1,
+          "transmission_chain": "美伊谈判预期 → 地缘风险溢价消退 → 原油供给恢复预期 → 军工/黄金ETF波动加剧",
+          "prev_price": "1.094",
+          "close_price": "1.101",
+          "actual_return": 0.73,
+          "predicted_direction": "down",
+          "actual_direction": "up",
+          "is_correct": false
+        }
+      ],
+      "overall_accuracy": 50,
+      "avg_return": -3.21,
+      "total_recommendations": 2
+    }
+  ]
+}
