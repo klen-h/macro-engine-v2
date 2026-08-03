@@ -12,6 +12,8 @@ export const CONFIG = {
 
   WECHAT_WEBHOOK: process.env.WECHAT_WEBHOOK || '',
 
+  WECHAT_WEBHOOK_REVIEW: process.env.WECHAT_WEBHOOK_REVIEW || '',
+
   API_ENDPOINTS: {
     SINA_MACRO: 'https://hq.sinajs.cn/list=hf_CL,hf_GC,hf_XAU,DINIW,fx_susdcnh,hf_NQ,rt_hkHSTECH,hf_OIL,hf_NK,hf_SI,hf_HG,globalbd_us10yt,hf_VX,gb_gld,globalbd_cn10yt,rt_hkHSI',
     JIN10_L5_LIQUIDITY: 'https://mp-api.jin10.com/api/home/item?category_id=52037&page=1&limit=200&platform=pc',
