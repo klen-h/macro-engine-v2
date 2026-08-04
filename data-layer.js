@@ -2,20 +2,32 @@ import axios from 'axios';
 import { HOLDINGS_MAP } from './const/index.js';
 import { getChinaMarketStatus } from './utils/chinaMarket.js';
 import { CONFIG } from './config.js';
+import { withRetry, isNetworkError } from './utils/retry.js';
 
 async function getHoldingsFromTencent() {
   try {
     const codes = Object.values(HOLDINGS_MAP).join(',');
     const url = `${CONFIG.API_ENDPOINTS.TENCENT_HOLDINGS}${codes}`;
 
-    const res = await axios.get(url, {
-      headers: { 
-        'Referer': 'https://finance.qq.com',
-        'User-Agent': 'Mozilla/5.0'
-      },
-      timeout: 10000,
-      responseType: 'text'
-    });
+    const res = await withRetry(
+      async () => axios.get(url, {
+        headers: { 
+          'Referer': 'https://finance.qq.com',
+          'User-Agent': 'Mozilla/5.0'
+        },
+        timeout: 10000,
+        responseType: 'text'
+      }),
+      {
+        maxRetries: 2,
+        baseDelayMs: 1500,
+        backoff: 'exponential',
+        retryIf: isNetworkError,
+        onRetry: (err, attempt, max, delay) => {
+          console.log(`   🔄 腾讯ETF行情接口重试 [${attempt}/${max}] ${(delay/1000).toFixed(1)}s 后: ${err.message}`);
+        }
+      }
+    );
 
     const results = [];
     const lines = res.data.trim().split('\n');

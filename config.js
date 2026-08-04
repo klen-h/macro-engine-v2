@@ -106,5 +106,7 @@ export const CONFIG = {
     PREDICTIONS: './public/data/predictions.json',
     VERIFICATIONS: './public/data/verifications.json',
     MACRO_HISTORY: './public/data/macro_history.json',
+    MACRO_SNAPSHOT: './data/macro_snapshot.json',
+    HOLDINGS_SNAPSHOT: './data/holdings_snapshot.json',
   }
 };

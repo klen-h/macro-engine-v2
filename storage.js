@@ -120,6 +120,44 @@ export function savePrediction(analysis, holdingsData) {
   console.log(`📝 预测已记录: ${recommendations.length} 条推荐`);
 }
 
+// ==================== 宏观行情缓存兜底（新增）====================
+export function saveMacroSnapshot(macro) {
+  if (!macro || typeof macro !== 'object') return;
+  const payload = {
+    savedAt: new Date().toISOString(),
+    data: macro,
+  };
+  saveJsonFile(CONFIG.PATHS.MACRO_SNAPSHOT, payload);
+}
+
+export function loadMacroSnapshot(maxAgeMs = 2 * 60 * 60 * 1000) {
+  const snap = loadJsonFile(CONFIG.PATHS.MACRO_SNAPSHOT, null);
+  if (!snap || !snap.savedAt || !snap.data) return null;
+  const age = Date.now() - new Date(snap.savedAt).getTime();
+  if (age > maxAgeMs) {
+    console.log(`   ⚠️ 宏观缓存已过期 (${(age/3600000).toFixed(1)}h > ${(maxAgeMs/3600000).toFixed(1)}h)，忽略`);
+    return null;
+  }
+  return snap.data;
+}
+
+export function saveHoldingsSnapshot(holdings) {
+  if (!Array.isArray(holdings)) return;
+  const payload = {
+    savedAt: new Date().toISOString(),
+    data: holdings,
+  };
+  saveJsonFile(CONFIG.PATHS.HOLDINGS_SNAPSHOT, payload);
+}
+
+export function loadHoldingsSnapshot(maxAgeMs = 2 * 60 * 60 * 1000) {
+  const snap = loadJsonFile(CONFIG.PATHS.HOLDINGS_SNAPSHOT, null);
+  if (!snap || !snap.savedAt || !Array.isArray(snap.data)) return null;
+  const age = Date.now() - new Date(snap.savedAt).getTime();
+  if (age > maxAgeMs) return null;
+  return snap.data;
+}
+
 // ==================== 收盘验证（新增）====================
 export function saveVerification(holdingsData) {
   let predictions = loadJsonFile(CONFIG.PATHS.PREDICTIONS, { predictions: [] });

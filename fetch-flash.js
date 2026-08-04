@@ -5,7 +5,7 @@
 import axios from 'axios';
 import { CONFIG } from './config.js';
 import { fetchSinaMacro } from './macro-layer.js';
-import { loadState, saveState, saveRawData, saveAnalysis, savePrediction } from './storage.js';
+import { loadState, saveState, saveRawData, saveAnalysis, savePrediction, saveMacroSnapshot, loadMacroSnapshot, saveHoldingsSnapshot, loadHoldingsSnapshot } from './storage.js';
 import {
   refreshMacroCache,
   loadMacroCache,
@@ -70,9 +70,25 @@ async function main() {
   try {
     marketData = await getMarketData();
     holdingsData = marketData?.holdings || [];
-    console.log(`   获取到 ${holdingsData.length} 个ETF行情`);
+    if (holdingsData.length > 0) {
+      saveHoldingsSnapshot(holdingsData);
+      console.log(`   获取到 ${holdingsData.length} 个ETF行情（已缓存快照）`);
+    } else {
+      const cachedHoldings = loadHoldingsSnapshot(4 * 60 * 60 * 1000);
+      if (cachedHoldings && cachedHoldings.length > 0) {
+        holdingsData = cachedHoldings;
+        console.log(`   ⚠️ ETF实时数据为空，使用缓存快照（${holdingsData.length}条）`);
+      } else {
+        console.log(`   获取到 0 个ETF行情`);
+      }
+    }
   } catch (e) {
-    console.log('⚠️ ETF数据获取失败');
+    console.log('⚠️ ETF数据获取失败:', e.message);
+    const cachedHoldings = loadHoldingsSnapshot(4 * 60 * 60 * 1000);
+    if (cachedHoldings && cachedHoldings.length > 0) {
+      holdingsData = cachedHoldings;
+      console.log(`   ⚠️ 回退到ETF缓存快照（${holdingsData.length}条）`);
+    }
   }
 
   const state = loadState();
@@ -98,7 +114,36 @@ async function main() {
 
   let macro = null;
   if (toAnalyze.length > 0) {
-    macro = await fetchSinaMacro();
+    try {
+      macro = await fetchSinaMacro();
+      const hasValidPrice = macro && (
+        (macro.crude && macro.crude.price > 0) ||
+        (macro.dxy && macro.dxy.price > 0) ||
+        (macro.us10yt && macro.us10yt.price > 0)
+      );
+      if (hasValidPrice) {
+        saveMacroSnapshot(macro);
+        console.log('   ✅ 宏观数据获取成功（已缓存快照）');
+      } else {
+        console.log('   ⚠️ 宏观数据接口返回值异常，尝试使用缓存快照');
+        const cached = loadMacroSnapshot(6 * 60 * 60 * 1000);
+        if (cached) {
+          macro = cached;
+          console.log('   ✅ 已回退到宏观缓存快照');
+        } else {
+          console.log('   ❌ 无有效缓存可用，将使用零值默认数据继续');
+        }
+      }
+    } catch (err) {
+      console.error('   ❌ fetchSinaMacro 异常:', err.message);
+      const cached = loadMacroSnapshot(6 * 60 * 60 * 1000);
+      if (cached) {
+        macro = cached;
+        console.log('   ✅ 异常已捕获，已回退到宏观缓存快照');
+      } else {
+        console.log('   ❌ 无缓存可用，将使用零值默认数据继续');
+      }
+    }
     console.log(`🧠 送审 LLM: ${toAnalyze.length} 个事件簇`);
     const analysis = await analyzeWithLLM(toAnalyze, macro, holdingsData);
     const filteredAnalysis = postFilterCompliance(analysis);

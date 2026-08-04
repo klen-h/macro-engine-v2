@@ -1,18 +1,30 @@
 import axios from 'axios';
 import { CONFIG } from './config.js';
+import { withRetry, isNetworkError } from './utils/retry.js';
 
 export async function fetchSinaMacro() {
   const url = CONFIG.API_ENDPOINTS.SINA_MACRO;
 
   try {
-    const { data } = await axios.get(url, {
-      headers: {
-        'Referer': 'https://finance.sina.com.cn',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      },
-      timeout: 10000,
-      responseType: 'arraybuffer',
-    });
+    const { data } = await withRetry(
+      async () => axios.get(url, {
+        headers: {
+          'Referer': 'https://finance.sina.com.cn',
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        },
+        timeout: 10000,
+        responseType: 'arraybuffer',
+      }),
+      {
+        maxRetries: 3,
+        baseDelayMs: 2000,
+        backoff: 'exponential',
+        retryIf: isNetworkError,
+        onRetry: (err, attempt, max, delay) => {
+          console.log(`   🔄 新浪宏观接口重试 [${attempt}/${max}] ${(delay/1000).toFixed(1)}s 后: ${err.message}`);
+        }
+      }
+    );
     const text = Buffer.from(data, 'binary').toString('latin1');
 
     const map = {};

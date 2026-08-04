@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node fetch-flash.js",
+    "macro-layer": "node macro-layer.js",
     "verify": "node scripts/verify.js",
     "review": "node review/review.js",
     "fetch-level-data": "node api/levelData.js"
